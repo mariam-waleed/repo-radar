@@ -8,4 +8,5 @@ export interface Repository {
   openIssues: number
   language: string | null
   htmlUrl: string
+  lastCommitDate: string | null
 }
