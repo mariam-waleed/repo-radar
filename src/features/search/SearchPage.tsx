@@ -3,6 +3,8 @@ import {
   useState,
 } from 'react'
 
+import type { ChangeEvent } from 'react'
+
 import {
   Alert,
   CircularProgress,
@@ -22,17 +24,25 @@ import type { Repository } from '../../types/repository'
 
 function SearchPage() {
   const [query, setQuery] = useState('')
+
   const [repositories, setRepositories] =
     useState<Repository[]>([])
+
   const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+
+  const [error, setError] =
+    useState<string | null>(null)
 
   const debouncedQuery = useDebouncedValue(query, 500)
 
   useEffect(() => {
-    const trimmedQuery = debouncedQuery.trim()
+    const trimmedQuery = query.trim()
+    const trimmedDebouncedQuery = debouncedQuery.trim()
 
-    if (!trimmedQuery) {
+    if (
+      !trimmedQuery ||
+      trimmedQuery !== trimmedDebouncedQuery
+    ) {
       return
     }
 
@@ -41,7 +51,7 @@ function SearchPage() {
     async function loadRepositories() {
       try {
         const results = await searchRepositories(
-          trimmedQuery,
+          trimmedDebouncedQuery,
           controller.signal,
         )
 
@@ -74,10 +84,10 @@ function SearchPage() {
     return () => {
       controller.abort()
     }
-  }, [debouncedQuery])
+  }, [query, debouncedQuery])
 
   function handleQueryChange(
-    event: React.ChangeEvent<HTMLInputElement>,
+    event: ChangeEvent<HTMLInputElement>,
   ) {
     const value = event.target.value
 
@@ -133,7 +143,7 @@ function SearchPage() {
         <Stack
           direction="row"
           spacing={1}
-          sx={{alignItems:"center"}}
+          alignItems="center"
         >
           <CircularProgress size={20} />
 
@@ -151,14 +161,14 @@ function SearchPage() {
 
       {!isLoading &&
         !error &&
-        debouncedQuery.trim() &&
+        query.trim() &&
         repositories.length === 0 && (
           <Alert severity="info">
             No repositories found.
           </Alert>
         )}
 
-      {repositories.length > 0 && (
+      {query.trim() && repositories.length > 0 && (
         <>
           <Typography
             variant="h6"
