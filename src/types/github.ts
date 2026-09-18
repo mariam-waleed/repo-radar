@@ -18,3 +18,10 @@ export interface GitHubSearchResponse {
   incomplete_results: boolean
   items: GitHubRepository[]
 }
+export interface GitHubCommit {
+  commit: {
+    committer: {
+      date: string | null
+    } | null
+  }
+}

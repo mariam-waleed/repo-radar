@@ -4,6 +4,7 @@ import {
   CardActions,
   CardContent,
   Chip,
+  CircularProgress,
   Stack,
   Typography,
 } from '@mui/material'
@@ -11,6 +12,7 @@ import {
 import BookmarkAddOutlinedIcon from '@mui/icons-material/BookmarkAddOutlined'
 import BookmarkRemoveOutlinedIcon from '@mui/icons-material/BookmarkRemoveOutlined'
 import BugReportOutlinedIcon from '@mui/icons-material/BugReportOutlined'
+import RefreshIcon from '@mui/icons-material/Refresh'
 import StarOutlineIcon from '@mui/icons-material/StarOutlined'
 
 import type { Repository } from '../types/repository'
@@ -19,12 +21,19 @@ interface RepositoryCardProps {
   repository: Repository
   isTracked: boolean
   onTrackToggle: () => void
+
+  onRefresh?: () => void
+  isRefreshing?: boolean
+  refreshError?: string | null
 }
 
 function RepositoryCard({
   repository,
   isTracked,
   onTrackToggle,
+  onRefresh,
+  isRefreshing = false,
+  refreshError = null,
 }: RepositoryCardProps) {
   return (
     <Card variant="outlined">
@@ -43,21 +52,26 @@ function RepositoryCard({
               color="text.secondary"
               sx={{ mt: 0.5 }}
             >
-              {repository.description ?? 'No description available'}
+              {repository.description ??
+                'No description available'}
             </Typography>
           </div>
 
           <Stack
             direction="row"
             spacing={2}
-           
-            sx={{alignItems: "center", flexWrap: "wrap"}}
             useFlexGap
+            sx={{
+              alignItems: 'center',
+              flexWrap: "wrap"
+            }}
           >
             <Stack
               direction="row"
               spacing={0.5}
-              sx={{alignItems: "center"}}
+              sx={{
+                alignItems: 'center',
+              }}
             >
               <StarOutlineIcon fontSize="small" />
 
@@ -69,7 +83,9 @@ function RepositoryCard({
             <Stack
               direction="row"
               spacing={0.5}
-              sx={{alignItems: "center"}}
+              sx={{
+                alignItems: 'center',
+              }}
             >
               <BugReportOutlinedIcon fontSize="small" />
 
@@ -86,10 +102,47 @@ function RepositoryCard({
               />
             )}
           </Stack>
+
+          {onRefresh && (
+            <Typography
+              variant="body2"
+              color="text.secondary"
+            >
+              Last commit:{' '}
+              {repository.lastCommitDate
+                ? new Date(
+                    repository.lastCommitDate,
+                  ).toLocaleString()
+                : 'Not loaded yet'}
+            </Typography>
+          )}
+
+          {refreshError && (
+            <AlertMessage message={refreshError} />
+          )}
         </Stack>
       </CardContent>
 
       <CardActions>
+        {onRefresh && (
+          <Button
+            size="small"
+            onClick={onRefresh}
+            disabled={isRefreshing}
+            startIcon={
+              isRefreshing ? (
+                <CircularProgress size={16} />
+              ) : (
+                <RefreshIcon />
+              )
+            }
+          >
+            {isRefreshing
+              ? 'Refreshing'
+              : 'Refresh'}
+          </Button>
+        )}
+
         <Button
           size="small"
           onClick={onTrackToggle}
@@ -114,6 +167,23 @@ function RepositoryCard({
         </Button>
       </CardActions>
     </Card>
+  )
+}
+
+interface AlertMessageProps {
+  message: string
+}
+
+function AlertMessage({
+  message,
+}: AlertMessageProps) {
+  return (
+    <Typography
+      variant="body2"
+      color="error"
+    >
+      {message}
+    </Typography>
   )
 }
 

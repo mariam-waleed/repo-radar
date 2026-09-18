@@ -12,7 +12,14 @@ export function loadTrackedRepositories(): Repository[] {
       return []
     }
 
-    return JSON.parse(savedRepositories) as Repository[]
+    const repositories =
+      JSON.parse(savedRepositories) as Repository[]
+
+    return repositories.map((repository) => ({
+      ...repository,
+      lastCommitDate:
+        repository.lastCommitDate ?? null,
+    }))
   } catch {
     return []
   }

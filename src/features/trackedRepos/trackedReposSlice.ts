@@ -42,12 +42,27 @@ const trackedReposSlice = createSlice({
           repository.id !== action.payload,
       )
     },
+
+    updateRepository(
+      state,
+      action: PayloadAction<Repository>,
+    ) {
+      const index = state.items.findIndex(
+        (repository) =>
+          repository.id === action.payload.id,
+      )
+
+      if (index !== -1) {
+        state.items[index] = action.payload
+      }
+    },
   },
 })
 
 export const {
   trackRepository,
   untrackRepository,
+  updateRepository,
 } = trackedReposSlice.actions
 
 export default trackedReposSlice.reducer
