@@ -1,16 +1,36 @@
-import { Container, Typography } from '@mui/material'
+import { useState } from 'react'
+
+import { Container } from '@mui/material'
+
+import Header, {
+  type AppView,
+} from './components/Header'
+
+import SearchPage from './features/search/SearchPage'
+import TrackedReposPage from './features/trackedRepos/TrackedReposPage'
 
 function App() {
-  return (
-    <Container sx={{ py: 4 }}>
-      <Typography variant="h3" component="h1">
-        Repo Radar
-      </Typography>
+  const [currentView, setCurrentView] =
+    useState<AppView>('search')
 
-      <Typography variant="body1" sx={{ mt: 1 }}>
-        Search, track, and monitor GitHub repositories.
-      </Typography>
-    </Container>
+  return (
+    <>
+      <Header
+        currentView={currentView}
+        onViewChange={setCurrentView}
+      />
+
+      <Container
+        maxWidth="lg"
+        sx={{ py: 4 }}
+      >
+        {currentView === 'search' ? (
+          <SearchPage />
+        ) : (
+          <TrackedReposPage />
+        )}
+      </Container>
+    </>
   )
 }
 
