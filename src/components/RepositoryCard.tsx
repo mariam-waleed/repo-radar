@@ -8,25 +8,33 @@ import {
   Typography,
 } from '@mui/material'
 
-import StarOutlinedIcon from '@mui/icons-material/StarOutlined'
-import BugReportOutlinedIcon from '@mui/icons-material/BugReportOutlined'
 import BookmarkAddOutlinedIcon from '@mui/icons-material/BookmarkAddOutlined'
+import BookmarkRemoveOutlinedIcon from '@mui/icons-material/BookmarkRemoveOutlined'
+import BugReportOutlinedIcon from '@mui/icons-material/BugReportOutlined'
+import StarOutlineIcon from '@mui/icons-material/StarOutlined'
 
 import type { Repository } from '../types/repository'
 
 interface RepositoryCardProps {
   repository: Repository
+  isTracked: boolean
+  onTrackToggle: () => void
 }
 
 function RepositoryCard({
   repository,
+  isTracked,
+  onTrackToggle,
 }: RepositoryCardProps) {
   return (
     <Card variant="outlined">
       <CardContent>
         <Stack spacing={2}>
           <div>
-            <Typography variant="h6">
+            <Typography
+              variant="h6"
+              component="h3"
+            >
               {repository.fullName}
             </Typography>
 
@@ -42,15 +50,16 @@ function RepositoryCard({
           <Stack
             direction="row"
             spacing={2}
-            sx={{ alignItems: 'center', flexWrap:"wrap"}}
-
+           
+            sx={{alignItems: "center", flexWrap: "wrap"}}
+            useFlexGap
           >
             <Stack
               direction="row"
               spacing={0.5}
-               sx={{ alignItems: 'center' }}
+              sx={{alignItems: "center"}}
             >
-              <StarOutlinedIcon fontSize="small" />
+              <StarOutlineIcon fontSize="small" />
 
               <Typography variant="body2">
                 {repository.stars.toLocaleString()}
@@ -60,7 +69,7 @@ function RepositoryCard({
             <Stack
               direction="row"
               spacing={0.5}
-               sx={{ alignItems: 'center' }}
+              sx={{alignItems: "center"}}
             >
               <BugReportOutlinedIcon fontSize="small" />
 
@@ -82,10 +91,17 @@ function RepositoryCard({
 
       <CardActions>
         <Button
-          startIcon={<BookmarkAddOutlinedIcon />}
           size="small"
+          onClick={onTrackToggle}
+          startIcon={
+            isTracked ? (
+              <BookmarkRemoveOutlinedIcon />
+            ) : (
+              <BookmarkAddOutlinedIcon />
+            )
+          }
         >
-          Track
+          {isTracked ? 'Untrack' : 'Track'}
         </Button>
 
         <Button
