@@ -8,13 +8,13 @@ import { BarChart } from '@mui/x-charts/BarChart'
 
 import type { Repository } from '../../types/repository'
 
-interface StarsChartProps {
+interface IssuesChartProps {
   repositories: Repository[]
 }
 
-function StarsChart({
+function IssuesChart({
   repositories,
-}: StarsChartProps) {
+}: IssuesChartProps) {
   const repositoryNames = repositories.map(
     (repository) => {
       const name = repository.fullName
@@ -25,8 +25,8 @@ function StarsChart({
     },
   )
 
-  const starCounts = repositories.map(
-    (repository) => repository.stars,
+  const issueCounts = repositories.map(
+    (repository) => repository.openIssues,
   )
 
   return (
@@ -37,7 +37,7 @@ function StarsChart({
           component="h3"
           sx={{ mb: 2 }}
         >
-          Stars per Repository
+          Open Issues per Repository
         </Typography>
 
         <BarChart
@@ -54,8 +54,8 @@ function StarsChart({
           ]}
           series={[
             {
-              data: starCounts,
-              label: 'Stars',
+              data: issueCounts,
+              label: 'Open Issues',
             },
           ]}
           height={Math.max(
@@ -68,4 +68,4 @@ function StarsChart({
   )
 }
 
-export default StarsChart
+export default IssuesChart

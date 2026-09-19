@@ -75,7 +75,7 @@ function Header({
               }
               onClick={() => onViewChange('tracked')}
             >
-              Tracked Repos
+              Tracked Repos ({trackedCount})
             </Button>
             <IconButton
               color="inherit"

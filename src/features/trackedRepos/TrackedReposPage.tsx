@@ -1,4 +1,5 @@
 import StarsChart from './StarsChart'
+import IssuesChart from './IssuesChart'
 
 import {
   Alert,
@@ -120,7 +121,9 @@ function TrackedReposPage() {
           <StarsChart
             repositories={trackedRepositories}
           />
-
+        <IssuesChart
+  repositories={trackedRepositories}
+/>
           <Stack spacing={2}>
             {trackedRepositories.map((repository) => (
               <RepositoryCard
