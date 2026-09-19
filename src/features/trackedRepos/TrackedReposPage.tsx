@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import StarsChart from './StarsChart'
 
 import {
   Alert,
@@ -158,39 +159,45 @@ function TrackedReposPage() {
           You aren't tracking any repositories yet.
         </Alert>
       ) : (
-        <Stack spacing={2}>
-          {trackedRepositories.map(
-            (repository) => (
-              <RepositoryCard
-                key={repository.id}
-                repository={repository}
-                isTracked
-                isRefreshing={
-                  refreshingById[
-                    repository.id
-                  ] ?? false
-                }
-                refreshError={
-                  errorById[
-                    repository.id
-                  ] ?? null
-                }
-                onRefresh={() => {
-                  void handleRefreshRepository(
-                    repository,
-                  )
-                }}
-                onTrackToggle={() => {
-                  dispatch(
-                    untrackRepository(
-                      repository.id,
-                    ),
-                  )
-                }}
-              />
-            ),
-          )}
-        </Stack>
+        <Stack spacing={3}>
+  <StarsChart
+    repositories={trackedRepositories}
+  />
+
+  <Stack spacing={2}>
+    {trackedRepositories.map(
+      (repository) => (
+        <RepositoryCard
+          key={repository.id}
+          repository={repository}
+          isTracked
+          isRefreshing={
+            refreshingById[
+              repository.id
+            ] ?? false
+          }
+          refreshError={
+            errorById[
+              repository.id
+            ] ?? null
+          }
+          onRefresh={() => {
+            void handleRefreshRepository(
+              repository,
+            )
+          }}
+          onTrackToggle={() => {
+            dispatch(
+              untrackRepository(
+                repository.id,
+              ),
+            )
+          }}
+        />
+      ),
+    )}
+  </Stack>
+</Stack>
       )}
     </Stack>
   )
