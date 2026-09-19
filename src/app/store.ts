@@ -1,6 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit'
 
-import trackedReposReducer from '../features/trackedRepos/trackedReposSlice'
+import trackedReposReducer, {
+  initialState as trackedReposInitialState,
+} from '../features/trackedRepos/trackedReposSlice'
 
 import {
   loadTrackedRepositories,
@@ -14,6 +16,7 @@ export const store = configureStore({
 
   preloadedState: {
     trackedRepos: {
+      ...trackedReposInitialState,
       items: loadTrackedRepositories(),
     },
   },

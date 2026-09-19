@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import StarsChart from './StarsChart'
 
 import {
@@ -19,12 +18,8 @@ import {
 import RepositoryCard from '../../components/RepositoryCard'
 
 import {
-  refreshRepository,
-} from '../../services/githubApi'
-
-import {
+  refreshTrackedRepository,
   untrackRepository,
-  updateRepository,
 } from './trackedReposSlice'
 
 import type { Repository } from '../../types/repository'
@@ -37,60 +32,22 @@ function TrackedReposPage() {
       (state) => state.trackedRepos.items,
     )
 
-  const [refreshingById, setRefreshingById] =
-    useState<Record<number, boolean>>({})
+  const refreshingById = useAppSelector(
+    (state) => state.trackedRepos.refreshingById,
+  )
 
-  const [errorById, setErrorById] =
-    useState<Record<number, string | null>>({})
+  const errorById = useAppSelector(
+    (state) => state.trackedRepos.errorById,
+  )
 
-  async function handleRefreshRepository(
-    repository: Repository,
-  ) {
-    setRefreshingById((current) => ({
-      ...current,
-      [repository.id]: true,
-    }))
-
-    setErrorById((current) => ({
-      ...current,
-      [repository.id]: null,
-    }))
-
-    try {
-      const updatedRepository =
-        await refreshRepository(
-          repository.owner,
-          repository.name,
-        )
-
-      dispatch(
-        updateRepository(updatedRepository),
-      )
-    } catch (error: unknown) {
-      const message =
-        error instanceof Error
-          ? error.message
-          : 'Failed to refresh repository.'
-
-      setErrorById((current) => ({
-        ...current,
-        [repository.id]: message,
-      }))
-    } finally {
-      setRefreshingById((current) => ({
-        ...current,
-        [repository.id]: false,
-      }))
-    }
+  function handleRefreshRepository(repository: Repository) {
+    void dispatch(refreshTrackedRepository(repository))
   }
 
-  async function handleRefreshAll() {
-    await Promise.all(
-      trackedRepositories.map(
-        (repository) =>
-          handleRefreshRepository(repository),
-      ),
-    )
+  function handleRefreshAll() {
+    trackedRepositories.forEach((repository) => {
+      void dispatch(refreshTrackedRepository(repository))
+    })
   }
 
   const isAnyRepositoryRefreshing =
@@ -106,13 +63,13 @@ function TrackedReposPage() {
           sm: 'row',
         }}
         spacing={2}
-       sx={{
-    justifyContent: 'space-between',
-    alignItems: {
-      xs: 'flex-start',
-      sm: 'center',
-    },
-  }}
+        sx={{
+          justifyContent: 'space-between',
+          alignItems: {
+            xs: 'flex-start',
+            sm: 'center',
+          },
+        }}
       >
         <div>
           <Typography
@@ -160,44 +117,32 @@ function TrackedReposPage() {
         </Alert>
       ) : (
         <Stack spacing={3}>
-  <StarsChart
-    repositories={trackedRepositories}
-  />
+          <StarsChart
+            repositories={trackedRepositories}
+          />
 
-  <Stack spacing={2}>
-    {trackedRepositories.map(
-      (repository) => (
-        <RepositoryCard
-          key={repository.id}
-          repository={repository}
-          isTracked
-          isRefreshing={
-            refreshingById[
-              repository.id
-            ] ?? false
-          }
-          refreshError={
-            errorById[
-              repository.id
-            ] ?? null
-          }
-          onRefresh={() => {
-            void handleRefreshRepository(
-              repository,
-            )
-          }}
-          onTrackToggle={() => {
-            dispatch(
-              untrackRepository(
-                repository.id,
-              ),
-            )
-          }}
-        />
-      ),
-    )}
-  </Stack>
-</Stack>
+          <Stack spacing={2}>
+            {trackedRepositories.map((repository) => (
+              <RepositoryCard
+                key={repository.id}
+                repository={repository}
+                isTracked
+                isRefreshing={
+                  refreshingById[repository.id] ?? false
+                }
+                refreshError={
+                  errorById[repository.id] ?? null
+                }
+                onRefresh={() => {
+                  handleRefreshRepository(repository)
+                }}
+                onTrackToggle={() => {
+                  dispatch(untrackRepository(repository.id))
+                }}
+              />
+            ))}
+          </Stack>
+        </Stack>
       )}
     </Stack>
   )

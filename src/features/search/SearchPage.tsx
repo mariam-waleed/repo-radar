@@ -26,6 +26,7 @@ import {
 } from '../../app/hooks'
 
 import {
+  refreshTrackedRepository,
   trackRepository,
   untrackRepository,
 } from '../trackedRepos/trackedReposSlice'
@@ -125,6 +126,11 @@ function SearchPage() {
     setIsLoading(true)
   }
 
+  function handleTrackRepository(repository: Repository) {
+    dispatch(trackRepository(repository))
+    void dispatch(refreshTrackedRepository(repository))
+  }
+
   return (
     <Stack spacing={3}>
       <div>
@@ -221,9 +227,7 @@ function SearchPage() {
                           untrackRepository(repository.id),
                         )
                       } else {
-                        dispatch(
-                          trackRepository(repository),
-                        )
+                        handleTrackRepository(repository)
                       }
                     }}
                   />

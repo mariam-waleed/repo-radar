@@ -1,13 +1,24 @@
-import { useState } from 'react'
+import {
+  lazy,
+  Suspense,
+  useState,
+} from 'react'
 
-import { Container } from '@mui/material'
+import {
+  CircularProgress,
+  Container,
+  Stack,
+} from '@mui/material'
 
 import Header, {
   type AppView,
 } from './components/Header'
 
 import SearchPage from './features/search/SearchPage'
-import TrackedReposPage from './features/trackedRepos/TrackedReposPage'
+
+const TrackedReposPage = lazy(
+  () => import('./features/trackedRepos/TrackedReposPage'),
+)
 
 function App() {
   const [currentView, setCurrentView] =
@@ -27,7 +38,20 @@ function App() {
         {currentView === 'search' ? (
           <SearchPage />
         ) : (
-          <TrackedReposPage />
+          <Suspense
+            fallback={
+              <Stack
+                sx={{
+                  alignItems: 'center',
+                  py: 8,
+                }}
+              >
+                <CircularProgress />
+              </Stack>
+            }
+          >
+            <TrackedReposPage />
+          </Suspense>
         )}
       </Container>
     </>
