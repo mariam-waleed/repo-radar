@@ -28,8 +28,12 @@ export function loadTrackedRepositories(): Repository[] {
 export function saveTrackedRepositories(
   repositories: Repository[],
 ) {
-  localStorage.setItem(
-    TRACKED_REPOS_KEY,
-    JSON.stringify(repositories),
-  )
+  try {
+    localStorage.setItem(
+      TRACKED_REPOS_KEY,
+      JSON.stringify(repositories),
+    )
+  } catch {
+    // Storage can be unavailable or full; in-memory state remains valid.
+  }
 }
