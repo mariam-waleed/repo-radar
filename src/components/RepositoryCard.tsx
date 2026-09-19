@@ -21,7 +21,6 @@ interface RepositoryCardProps {
   repository: Repository
   isTracked: boolean
   onTrackToggle: () => void
-
   onRefresh?: () => void
   isRefreshing?: boolean
   refreshError?: string | null
