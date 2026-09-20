@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 import StarsChart from './StarsChart'
 import IssuesChart from './IssuesChart'
 
@@ -5,6 +7,10 @@ import {
   Alert,
   Button,
   CircularProgress,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
   Stack,
   Typography,
 } from '@mui/material'
@@ -25,6 +31,12 @@ import {
 
 import type { Repository } from '../../types/repository'
 
+type SortOption =
+  | 'name'
+  | 'stars'
+  | 'issues'
+  | 'commit'
+
 function TrackedReposPage() {
   const dispatch = useAppDispatch()
 
@@ -41,6 +53,9 @@ function TrackedReposPage() {
     (state) => state.trackedRepos.errorById,
   )
 
+  const [sortBy, setSortBy] =
+    useState<SortOption>('name')
+
   function handleRefreshRepository(repository: Repository) {
     void dispatch(refreshTrackedRepository(repository))
   }
@@ -55,6 +70,36 @@ function TrackedReposPage() {
     Object.values(refreshingById).some(
       (isRefreshing) => isRefreshing,
     )
+
+  const sortedRepositories = [
+    ...trackedRepositories,
+  ].sort((a, b) => {
+    switch (sortBy) {
+      case 'stars':
+        return b.stars - a.stars
+
+      case 'issues':
+        return b.openIssues - a.openIssues
+
+      case 'commit': {
+        const aDate = a.lastCommitDate
+          ? new Date(a.lastCommitDate).getTime()
+          : 0
+
+        const bDate = b.lastCommitDate
+          ? new Date(b.lastCommitDate).getTime()
+          : 0
+
+        return bDate - aDate
+      }
+
+      case 'name':
+      default:
+        return a.fullName.localeCompare(
+          b.fullName,
+        )
+    }
+  })
 
   return (
     <Stack spacing={3}>
@@ -89,27 +134,79 @@ function TrackedReposPage() {
           </Typography>
         </div>
 
-        <Button
-          variant="outlined"
-          onClick={() => {
-            void handleRefreshAll()
+        <Stack
+          direction={{
+            xs: 'column',
+            sm: 'row',
           }}
-          disabled={
-            trackedRepositories.length === 0 ||
-            isAnyRepositoryRefreshing
-          }
-          startIcon={
-            isAnyRepositoryRefreshing ? (
-              <CircularProgress size={16} />
-            ) : (
-              <RefreshIcon />
-            )
-          }
+          spacing={1}
+          sx={{
+            width: {
+              xs: '100%',
+              sm: 'auto',
+            },
+          }}
         >
-          {isAnyRepositoryRefreshing
-            ? 'Refreshing All'
-            : 'Refresh All'}
-        </Button>
+          <FormControl
+            size="small"
+            sx={{
+              minWidth: 190,
+            }}
+          >
+            <InputLabel id="sort-repositories-label">
+              Sort by
+            </InputLabel>
+
+            <Select
+              labelId="sort-repositories-label"
+              value={sortBy}
+              label="Sort by"
+              onChange={(event) => {
+                setSortBy(
+                  event.target.value as SortOption,
+                )
+              }}
+            >
+              <MenuItem value="name">
+                Name (A-Z)
+              </MenuItem>
+
+              <MenuItem value="stars">
+                Stars (High to Low)
+              </MenuItem>
+
+              <MenuItem value="issues">
+                Open Issues (High to Low)
+              </MenuItem>
+
+              <MenuItem value="commit">
+                Latest Commit
+              </MenuItem>
+            </Select>
+          </FormControl>
+
+          <Button
+            variant="outlined"
+            onClick={() => {
+              void handleRefreshAll()
+            }}
+            disabled={
+              trackedRepositories.length === 0 ||
+              isAnyRepositoryRefreshing
+            }
+            startIcon={
+              isAnyRepositoryRefreshing ? (
+                <CircularProgress size={16} />
+              ) : (
+                <RefreshIcon />
+              )
+            }
+          >
+            {isAnyRepositoryRefreshing
+              ? 'Refreshing All'
+              : 'Refresh All'}
+          </Button>
+        </Stack>
       </Stack>
 
       {trackedRepositories.length === 0 ? (
@@ -119,15 +216,15 @@ function TrackedReposPage() {
       ) : (
         <Stack spacing={3}>
           <StarsChart
-            repositories={trackedRepositories}
+            repositories={sortedRepositories}
           />
 
           <IssuesChart
-            repositories={trackedRepositories}
+            repositories={sortedRepositories}
           />
 
           <Stack spacing={2}>
-            {trackedRepositories.map((repository) => (
+            {sortedRepositories.map((repository) => (
               <RepositoryCard
                 key={repository.id}
                 repository={repository}
