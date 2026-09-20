@@ -7,9 +7,9 @@ import {
 import {
   CircularProgress,
   Container,
-  Stack,
   CssBaseline,
   ThemeProvider,
+  Stack,
   createTheme,
 } from '@mui/material'
 
@@ -18,24 +18,25 @@ import Header, {
   type AppView,
 } from './components/Header'
 
-import SearchPage from './features/search/SearchPage'
 import { useAppSelector } from './app/hooks'
+
+import SearchPage from './features/search/SearchPage'
+
 const TrackedReposPage = lazy(
   () => import('./features/trackedRepos/TrackedReposPage'),
 )
+
 const THEME_KEY = 'repo-radar-theme'
+
 function App() {
   const [currentView, setCurrentView] =
     useState<AppView>('search')
-    const [mode, setMode] =
-    useState<PaletteMode>(() => {
-      const savedMode =
-        localStorage.getItem(THEME_KEY)
 
-      return savedMode === 'dark'
-        ? 'dark'
-        : 'light'
-    })
+  const [mode, setMode] = useState<PaletteMode>(() => {
+    const savedMode = localStorage.getItem(THEME_KEY)
+
+    return savedMode === 'dark' ? 'dark' : 'light'
+  })
 
   const trackedCount = useAppSelector(
     (state) => state.trackedRepos.items.length,
@@ -60,8 +61,9 @@ function App() {
       newMode,
     )
   }
+
   return (
-       <ThemeProvider theme={theme}>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
       <Header
         currentView={currentView}
@@ -94,7 +96,7 @@ function App() {
           </Suspense>
         )}
       </Container>
-     </ThemeProvider>
+    </ThemeProvider>
   )
 }
 

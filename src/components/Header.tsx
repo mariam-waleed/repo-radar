@@ -1,5 +1,5 @@
 import {
-   AppBar,
+  AppBar,
   Button,
   Container,
   IconButton,
@@ -10,6 +10,7 @@ import {
 
 import type { PaletteMode } from '@mui/material'
 import RadarIcon from '@mui/icons-material/Radar'
+
 import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined'
 import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined'
 
@@ -77,7 +78,7 @@ function Header({
             >
               Tracked Repos ({trackedCount})
             </Button>
-            <IconButton
+              <IconButton
               color="inherit"
               onClick={onToggleTheme}
               aria-label="toggle theme"
