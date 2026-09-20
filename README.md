@@ -1,71 +1,76 @@
-# React + TypeScript + Vite
+# Repo Radar
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Repo Radar is a React + TypeScript application for searching GitHub repositories, tracking selected repositories, and monitoring their latest statistics.
 
-Currently, two official plugins are available:
+## Live Demo
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+https://repo-radar-beryl.vercel.app/
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Search public GitHub repositories with debounced search
+- Track and untrack repositories
+- Persist tracked repositories across browser refreshes
+- Refresh a single repository or all tracked repositories
+- Independent loading and error states for each repository
+- Display stars, open issues, language, and latest commit date
+- Visualize stars and open issues using bar charts
+- Light and dark theme switching with persisted preference
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- React
+- TypeScript
+- Vite
+- Redux Toolkit
+- Material UI
+- MUI X Charts
+- GitHub REST API
+- Vercel
 
-```js
-export default defineConfig([
-  # Repo Radar
+## Setup
 
-  Repo Radar is a React and TypeScript application for searching GitHub repositories, tracking selected repositories, and monitoring their stars, open issues, and latest commit dates.
+Clone the repository and install the dependencies:
 
-  ## Setup
+```bash
+npm install
+```
 
-  Requirements: Node.js 20 or newer and npm.
+Run the application locally:
 
-  ```bash
-  npm install
-  npm run dev
-  ```
+```bash
+npm run dev
+```
 
-  Open the local URL printed by Vite. Other useful commands are:
+Create a production build:
 
-  ```bash
-  npm run build    # Type-check and create a production build
-  npm run lint     # Run ESLint
-  npm run preview  # Preview the production build
-  ```
+```bash
+npm run build
+```
 
-  ## Features
+Run ESLint:
 
-  - Search public GitHub repositories with a debounced search field.
-  - Track and untrack repositories from search results.
-  - Persist tracked repositories in browser `localStorage`.
-  - Refresh one repository or all repositories concurrently.
-  - Show independent loading and error states for each repository.
-  - Display stars, open issues, language, and latest commit date.
-  - Show stars and open issues in responsive horizontal bar charts.
-  - Switch between light and dark themes; the preference is persisted locally.
+```bash
+npm run lint
+```
 
-  The charts use a horizontal layout intentionally. Repository names can be long, so placing them on the y-axis gives each label more room and keeps the chart readable.
+## Architecture and Technical Decisions
 
-  ## Architecture and technical decisions
+The application keeps local and shared state separate based on where the data is needed.
 
-  - **React + TypeScript + Vite:** fast development feedback with strict domain models.
-  - **Redux Toolkit:** owns the durable tracked-repository collection and refresh lifecycle.
-  - **Typed async thunk:** one refresh data path is shared by initial tracking, individual refresh, and refresh-all operations.
-  - **Local component state:** limited to view-specific concerns such as the current search query and debounced search results.
-  - **API boundary:** `githubApi.ts` maps GitHub response shapes into the app's `Repository` model, keeping external API details out of UI components.
-  - **Feature organization:** search and tracked repositories are kept in separate feature folders; reusable cards and app navigation live in `components`.
-  - **Lazy loading:** the tracked-repositories route is loaded on demand because it includes chart dependencies, reducing the initial bundle size.
+Search query, results, loading, and error state are kept locally in the search page because they are only used there. Redux Toolkit is used for tracked repositories because that data is shared between the tracked repositories page, charts, and header.
 
-  ## Assumptions and limitations
+GitHub API calls are kept in a separate service layer so API logic is not mixed with UI components. API responses are also mapped to the application's own repository model before being used by the UI.
 
-  - The app uses the public GitHub API without authentication. GitHub rate limits therefore apply.
-  - Tracked data and theme preference are stored only in the current browser's `localStorage`; they are not synchronized between devices.
-  - Commit dates are loaded when a repository is first tracked and whenever it is refreshed.
-  - A repository with no commits may show no commit date.
-  - There is no backend, user account, or server-side persistence.
-    },
+Repository refresh operations are handled asynchronously with independent loading and error states, so refreshing one repository does not block the others.
+
+Tracked repositories and the selected theme are stored in `localStorage` so they remain available after refreshing or reopening the application.
+
+The tracked repositories page is lazy-loaded because it contains the chart-related code and is not required when the application first loads.
+
+## Assumptions and Limitations
+
+- The application uses the public GitHub REST API without authentication, so GitHub API rate limits apply.
+- Search results are limited and pagination is not implemented.
+- Tracked repositories and theme preferences are stored only in the current browser.
+- The application has no backend, user authentication, or cross-device synchronization.
