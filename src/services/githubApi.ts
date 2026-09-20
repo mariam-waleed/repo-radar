@@ -8,6 +8,11 @@ import type { Repository } from '../types/repository'
 
 const GITHUB_API_URL = 'https://api.github.com'
 
+interface SearchRepositoriesResult {
+  repositories: Repository[]
+  totalCount: number
+}
+
 function mapGitHubRepository(
   repository: GitHubRepository,
 ): Repository {
@@ -27,10 +32,11 @@ function mapGitHubRepository(
 
 export async function searchRepositories(
   query: string,
+  page: number,
   signal?: AbortSignal,
-): Promise<Repository[]> {
+): Promise<SearchRepositoriesResult> {
   const response = await fetch(
-    `${GITHUB_API_URL}/search/repositories?q=${encodeURIComponent(query)}&per_page=10`,
+    `${GITHUB_API_URL}/search/repositories?q=${encodeURIComponent(query)}&per_page=10&page=${page}`,
     {
       signal,
       headers: {
@@ -48,7 +54,10 @@ export async function searchRepositories(
   const data =
     (await response.json()) as GitHubSearchResponse
 
-  return data.items.map(mapGitHubRepository)
+  return {
+    repositories: data.items.map(mapGitHubRepository),
+    totalCount: data.total_count,
+  }
 }
 
 async function getRepository(
@@ -89,7 +98,6 @@ async function getLatestCommitDate(
     },
   )
 
-  // Empty repositories can return 409.
   if (response.status === 409) {
     return null
   }

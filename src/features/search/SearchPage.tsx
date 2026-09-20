@@ -9,6 +9,7 @@ import {
   Alert,
   CircularProgress,
   InputAdornment,
+  Pagination,
   Stack,
   TextField,
   Typography,
@@ -33,6 +34,8 @@ import {
 
 import type { Repository } from '../../types/repository'
 
+const PAGE_SIZE = 10
+
 function SearchPage() {
   const dispatch = useAppDispatch()
 
@@ -50,7 +53,17 @@ function SearchPage() {
   const [error, setError] =
     useState<string | null>(null)
 
+  const [page, setPage] = useState(1)
+
+  const [totalCount, setTotalCount] =
+    useState(0)
+
   const debouncedQuery = useDebouncedValue(query, 500)
+
+  const totalPages = Math.min(
+    Math.ceil(totalCount / PAGE_SIZE),
+    100,
+  )
 
   useEffect(() => {
     const trimmedQuery = query.trim()
@@ -69,14 +82,18 @@ function SearchPage() {
     const controller = new AbortController()
 
     async function loadRepositories() {
+      setIsLoading(true)
+
       try {
-        const results = await searchRepositories(
+        const result = await searchRepositories(
           trimmedDebouncedQuery,
+          page,
           controller.signal,
         )
 
         if (!controller.signal.aborted) {
-          setRepositories(results)
+          setRepositories(result.repositories)
+          setTotalCount(result.totalCount)
           setError(null)
         }
       } catch (error: unknown) {
@@ -104,7 +121,7 @@ function SearchPage() {
     return () => {
       controller.abort()
     }
-  }, [query, debouncedQuery])
+  }, [query, debouncedQuery, page])
 
   function handleQueryChange(
     event: ChangeEvent<HTMLInputElement>,
@@ -112,6 +129,10 @@ function SearchPage() {
     const value = event.target.value
 
     setQuery(value)
+
+    // A new search should always start from page 1.
+    setPage(1)
+    setTotalCount(0)
 
     // Remove previous results immediately when
     // the user changes or deletes the query.
@@ -198,6 +219,7 @@ function SearchPage() {
         )}
 
       {!isLoading &&
+        !error &&
         query.trim().length > 0 &&
         repositories.length > 0 && (
           <>
@@ -234,6 +256,24 @@ function SearchPage() {
                 )
               })}
             </Stack>
+
+            {totalPages > 1 && (
+              <Stack
+                sx={{
+                  alignItems: 'center',
+                  pt: 2,
+                }}
+              >
+                <Pagination
+                  count={totalPages}
+                  page={page}
+                  color="primary"
+                  onChange={(_, newPage) => {
+                    setPage(newPage)
+                  }}
+                />
+              </Stack>
+            )}
           </>
         )}
     </Stack>
