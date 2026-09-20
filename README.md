@@ -46,6 +46,9 @@ npm run lint
 
 ## Assumptions and Limitations
 
+## Assumptions and Limitations
+
 - The app uses the unauthenticated GitHub REST API, so rate limits apply.
-- Search results are paginated according to GitHub API limits.
+- GitHub Search exposes up to the first 1,000 results for a query. Since the app shows 10 results per page, pagination is capped at 100 pages.
+- GitHub API rate limits may temporarily affect search, pagination, and repository refresh requests.
 - Data is stored only in the current browser; there is no backend or user account system.
