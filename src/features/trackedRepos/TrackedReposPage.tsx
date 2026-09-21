@@ -235,7 +235,7 @@ function TrackedReposPage() {
         <Stack spacing={3}>
           <Stack
             direction="row"
-            justifyContent="flex-end"
+            sx= {{justifyContent: "flex-end"}}
           >
             <Button
               variant="outlined"
