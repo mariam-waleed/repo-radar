@@ -16,7 +16,7 @@ import {
 } from '@mui/material'
 
 import RefreshIcon from '@mui/icons-material/Refresh'
-
+import DeleteSweepIcon from '@mui/icons-material/DeleteSweep'
 import {
   useAppDispatch,
   useAppSelector,
@@ -63,6 +63,12 @@ function TrackedReposPage() {
   function handleRefreshAll() {
     trackedRepositories.forEach((repository) => {
       void dispatch(refreshTrackedRepository(repository))
+    })
+  }
+
+    function handleUntrackAll() {
+    trackedRepositories.forEach((repository) => {
+      dispatch(untrackRepository(repository.id))
     })
   }
 
@@ -149,6 +155,7 @@ function TrackedReposPage() {
         >
           <FormControl
             size="small"
+            disabled={trackedRepositories.length === 0}
             sx={{
               minWidth: 190,
             }}
@@ -184,7 +191,15 @@ function TrackedReposPage() {
               </MenuItem>
             </Select>
           </FormControl>
-
+          <Button
+            variant="outlined"
+            color="error"
+            onClick={handleUntrackAll}
+            disabled={trackedRepositories.length === 0}
+            startIcon={<DeleteSweepIcon />}
+          >
+            Untrack All
+          </Button>
           <Button
             variant="outlined"
             onClick={() => {

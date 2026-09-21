@@ -25,6 +25,7 @@ https://repo-radar-beryl.vercel.app/
 - Additional Open Issues chart
 - Light and dark theme with persisted preference
 - Tracked repository count in the header
+- Untrack All Button to untrack all tracked repositories
 - Lazy loading of the tracked repositories page
 
 ## Tech Stack
