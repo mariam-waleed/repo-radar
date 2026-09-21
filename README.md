@@ -27,7 +27,7 @@ https://repo-radar-beryl.vercel.app/
 - **Tracked repository** count in the header
 - **Untrack All Button** to untrack all tracked repositories
 - **Hide/Show Charts button** to make the page display more flexible
-- **Loading indicator:** Tracked repository refreshes show a visible loading indicator, including Refresh All.
+- **Loading indicator bar:** Tracked repository refreshes show a visible loading indicator, including Refresh All.
 - **Lazy loading** of the tracked repositories page
 
 ## Tech Stack
@@ -81,3 +81,14 @@ npm run lint
 - GitHub API rate limits may temporarily affect search, pagination, and repository refresh requests.
 - GitHub Search exposes up to the first 1,000 results for a query. With 10 results per page, pagination is capped at 100 pages.
 - Data is stored only in the current browser; there is no backend or user account system.
+
+## Testing
+
+The application was manually tested against its functional requirements, enhancements, and responsive behavior.
+
+- **Test cases:** 18
+- **Passed:** 18
+- **Pass rate:** 100%
+- **Environment:** Production deployment using Google Chrome
+
+See the complete [Manual Test Report](docs/Manual_Test_Report.md).
