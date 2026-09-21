@@ -9,6 +9,7 @@ import {
   CircularProgress,
   FormControl,
   InputLabel,
+  LinearProgress,
   MenuItem,
   Select,
   Stack,
@@ -55,6 +56,8 @@ function TrackedReposPage() {
 
   const [sortBy, setSortBy] =
     useState<SortOption>('name')
+   const [showCharts, setShowCharts] =
+    useState(true)  
 
   function handleRefreshRepository(repository: Repository) {
     void dispatch(refreshTrackedRepository(repository))
@@ -227,16 +230,38 @@ function TrackedReposPage() {
       {trackedRepositories.length === 0 ? (
         <Alert severity="info">
           You aren't tracking any repositories yet.
-        </Alert>
+       </Alert>
       ) : (
         <Stack spacing={3}>
-          <StarsChart
-            repositories={sortedRepositories}
-          />
+          <Stack
+            direction="row"
+            justifyContent="flex-end"
+          >
+            <Button
+              variant="outlined"
+              onClick={() => {
+                setShowCharts((current) => !current)
+              }}
+            >
+              {showCharts ? 'Hide Charts' : 'Show Charts'}
+            </Button>
+          </Stack>
 
-          <IssuesChart
-            repositories={sortedRepositories}
-          />
+          {isAnyRepositoryRefreshing && (
+            <LinearProgress />
+          )}
+
+          {showCharts && (
+            <>
+              <StarsChart
+                repositories={sortedRepositories}
+              />
+
+              <IssuesChart
+                repositories={sortedRepositories}
+              />
+            </>
+          )}
 
           <Stack spacing={2}>
             {sortedRepositories.map((repository) => (
