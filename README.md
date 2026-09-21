@@ -91,4 +91,5 @@ The application was manually tested against its functional requirements, enhance
 - **Pass rate:** 100%
 - **Environment:** Production deployment using Google Chrome
 
-See the complete [Manual Test Report](docs/Manual_Test_Report.md).
+#### See the complete [Manual Test Report](docs/Manual_Test_Report.md).
+#### HTML Version: [HTML Test Report](docs/Manual_Test_Report.html).

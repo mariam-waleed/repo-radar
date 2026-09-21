@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Repo Radar - Manual Test Report</title>
+  <style>
+    :root {
+      --bg: #f7f9fc;
+      --surface: #ffffff;
+      --text: #1f2937;
+      --muted: #667085;
+      --border: #dfe5ec;
+      --accent: #2563eb;
+      --success: #067647;
+      --success-bg: #ecfdf3;
+      --note-bg: #fff8e6;
+      --note-border: #f5c451;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, "Segoe UI", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 40px 24px 64px;
+    }
+
+    .hero, .section, .test-case {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    }
+
+    .hero {
+      padding: 32px;
+      margin-bottom: 24px;
+    }
+
+    .section {
+      padding: 28px;
+      margin-bottom: 24px;
+    }
+
+    .test-case {
+      padding: 24px;
+      margin: 18px 0;
+    }
+
+    h1, h2, h3, h4 {
+      margin-top: 0;
+      line-height: 1.25;
+    }
+
+    h1 { font-size: 2.15rem; margin-bottom: 8px; }
+    h2 { font-size: 1.55rem; margin-bottom: 20px; }
+    h3 { font-size: 1.15rem; margin-bottom: 12px; }
+
+    .subtitle, .muted { color: var(--muted); }
+
+    .status {
+      display: inline-block;
+      padding: 5px 10px;
+      border-radius: 999px;
+      background: var(--success-bg);
+      color: var(--success);
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .meta {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px 28px;
+      margin-top: 24px;
+    }
+
+    .meta div {
+      padding-bottom: 8px;
+      border-bottom: 1px solid #eef2f6;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0 8px;
+      font-size: 0.95rem;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 10px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f2f5f9;
+      font-weight: 700;
+    }
+
+    .pass {
+      color: var(--success);
+      font-weight: 700;
+    }
+
+    .note {
+      background: var(--note-bg);
+      border-left: 4px solid var(--note-border);
+      padding: 14px 16px;
+      border-radius: 8px;
+      margin: 14px 0;
+    }
+
+    ul, ol { padding-left: 24px; }
+    code {
+      background: #f2f4f7;
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-family: Consolas, monospace;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin: 20px 0;
+    }
+
+    .metric {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px;
+      text-align: center;
+      background: #fafcff;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 1.35rem;
+      margin-top: 4px;
+    }
+
+    .final {
+      border: 2px solid #9fd5b8;
+      background: #f3fff8;
+    }
+
+    @media (max-width: 760px) {
+      .meta, .summary-grid { grid-template-columns: 1fr; }
+      .container { padding: 20px 12px 40px; }
+      .hero, .section, .test-case { padding: 20px; }
+      table { display: block; overflow-x: auto; white-space: nowrap; }
+      h1 { font-size: 1.7rem; }
+    }
+
+    @media print {
+      body { background: white; }
+      .container { max-width: none; padding: 0; }
+      .hero, .section, .test-case {
+        box-shadow: none;
+        break-inside: avoid;
+      }
+      a { color: black; text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <section class="hero">
+      <span class="status">✅ PASSED</span>
+      <h1>Repo Radar - Manual Test Report</h1>
+      <p class="subtitle">
+        Manual black-box verification of the Repo Radar frontend application against its functional requirements,
+        user-facing enhancements, and responsive design behavior.
+      </p>
+
+      <div class="meta">
+        <div><strong>Application:</strong> Repo Radar</div>
+        <div><strong>Test Type:</strong> Manual Black-Box Testing</div>
+        <div><strong>Environment:</strong> Production deployment</div>
+        <div><strong>Primary Browser:</strong> Google Chrome</div>
+        <div><strong>Test URL:</strong> <a href="https://repo-radar-beryl.vercel.app/">repo-radar-beryl.vercel.app</a></div>
+        <div><strong>Overall Status:</strong> <span class="pass">Passed</span></div>
+      </div>
+
+      <div class="summary-grid">
+        <div class="metric">Passed<strong>18</strong></div>
+        <div class="metric">Failed<strong>0</strong></div>
+        <div class="metric">Executed<strong>18</strong></div>
+        <div class="metric">Pass Rate<strong>100%</strong></div>
+      </div>
+
+      <p>
+        All planned manual black-box test cases were executed successfully. The application satisfies the tested
+        functional requirements and implemented enhancements and is ready for deployment/submission.
+      </p>
+    </section>
+
+    <section class="section">
+      <h2>1. Test Scope and Requirements</h2>
+
+      <h3>Functional Requirements</h3>
+      <table>
+        <thead><tr><th>ID</th><th>Requirement</th></tr></thead>
+        <tbody>
+          <tr><td>FR-01</td><td>Debounced GitHub repository search</td></tr>
+          <tr><td>FR-02</td><td>Track and untrack repositories</td></tr>
+          <tr><td>FR-03</td><td>Tracked Repositories view</td></tr>
+          <tr><td>FR-04</td><td>Display stars, open issues, and last commit date</td></tr>
+          <tr><td>FR-05</td><td>Refresh individual repositories and/or all repositories</td></tr>
+          <tr><td>FR-06</td><td>Independent loading and error states per repository</td></tr>
+          <tr><td>FR-07</td><td>Persist tracked repositories between browser sessions</td></tr>
+          <tr><td>FR-08</td><td>Bar chart showing stars per tracked repository</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Non-Functional Requirement</h3>
+      <table>
+        <thead><tr><th>ID</th><th>Requirement</th></tr></thead>
+        <tbody>
+          <tr><td>NFR-01</td><td>Responsive and usable layout across mobile, tablet, and desktop viewports</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Added Enhancements</h3>
+      <table>
+        <thead><tr><th>ID</th><th>Enhancement</th></tr></thead>
+        <tbody>
+          <tr><td>ENH-01</td><td>Paginated GitHub search results</td></tr>
+          <tr><td>ENH-02</td><td>Open Issues chart</td></tr>
+          <tr><td>ENH-03</td><td>Tracked repository sorting</td></tr>
+          <tr><td>ENH-04</td><td>Light / Dark theme switching and persistence</td></tr>
+          <tr><td>ENH-05</td><td>Tracked repository count in the header</td></tr>
+          <tr><td>ENH-06</td><td>Untrack All button</td></tr>
+          <tr><td>ENH-07</td><td>Hide / Show Charts button</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="section">
+      <h2>2. Functional Test Execution</h2>
+
+      <article class="test-case">
+        <h3>TC-01 - Verify Debounced GitHub Repository Search <span class="pass">✅ Passed</span></h3>
+        <p><strong>Requirement:</strong> FR-01</p>
+        <h4>Steps</h4>
+        <ol>
+          <li>Clear the browser Network log.</li>
+          <li>Quickly type <code>react</code> without intentionally pausing.</li>
+          <li>Observe the Network tab while typing.</li>
+          <li>Stop typing and wait for the search results.</li>
+        </ol>
+        <h4>Expected Result</h4>
+        <ul>
+          <li>A GitHub search request is not sent for every keystroke.</li>
+          <li>The application waits briefly after typing stops before sending the request.</li>
+          <li>Results correspond to the final query.</li>
+        </ul>
+      </article>
+
+      <article class="test-case">
+        <h3>TC-02 - Verify Stale Search Results Are Not Displayed <span class="pass">✅ Passed</span></h3>
+        <p><strong>Requirement:</strong> FR-01</p>
+        <h4>Steps</h4>
+        <ol>
+          <li>Enable a slow network profile such as Slow 3G.</li>
+          <li>Search for <code>react</code>.</li>
+          <li>Before completion, replace it with <code>redux</code>.</li>
+          <li>Observe the final results.</li>
+        </ol>
+        <h4>Expected Result</h4>
+        <ul>
+          <li>Old results do not overwrite the newer query.</li>
+          <li>Only the current query results remain visible.</li>
+        </ul>
+      </article>
+
+      <article class="test-case">
+        <h3>TC-03 - Verify Search Pagination <span class="pass">✅ Passed</span></h3>
+        <p><strong>Requirement:</strong> ENH-01</p>
+        <ol>
+          <li>Search for <code>react</code>.</li>
+          <li>Verify up to 10 results on the first page.</li>
+          <li>Navigate to page 2 and verify the results change.</li>
+          <li>Return to page 1.</li>
+          <li>Verify Previous/Next control states.</li>
+        </ol>
+        <h4>Expected Result</h4>
+        <ul>
+          <li>Pagination loads the corresponding result page.</li>
+          <li>Previous is disabled on page 1.</li>
+          <li>Next is disabled on the last available page.</li>
+        </ul>
+      </article>
+
+      <article class="test-case">
+        <h3>TC-04 - Verify Pagination Resets for a New Search <span class="pass">✅ Passed</span></h3>
+        <p><strong>Requirement:</strong> ENH-01</p>
+        <ol>
+          <li>Search for <code>react</code>.</li>
+          <li>Navigate past page 1.</li>
+          <li>Replace the query with <code>redux</code>.</li>
+        </ol>
+        <h4>Expected Result</h4>
+        <ul>
+          <li>Pagination resets to page 1.</li>
+          <li>Results belong to the new query.</li>
+        </ul>
+      </article>
+
+      <article class="test-case">
+        <h3>TC-05 - Verify Track Repository <span class="pass">✅ Passed</span></h3>
+        <p><strong>Requirement:</strong> FR-02, FR-03, ENH-05</p>
+        <ol>
+          <li>Search for a repository.</li>
+          <li>Select Track.</li>
+          <li>Observe the tracked count.</li>
+          <li>Open Tracked Repositories.</li>
+        </ol>
+        <h4>Expected Result</h4>
+        <ul>
+          <li>The repository becomes tracked.</li>
+          <li>The header count increases.</li>
+          <li>The repository appears in the tracked view.</li>
+        </ul>
+      </article>
+
+      <article class="test-case">
+        <h3>TC-06 - Verify Untrack Repository <span class="pass">✅ Passed</span></h3>
+        <p><strong>Requirement:</strong> FR-02, FR-03, ENH-05</p>
+        <ol>
+          <li>Open Tracked Repositories.</li>
+          <li>Untrack one repository.</li>
+          <li>Observe the list, count, and charts.</li>
+        </ol>
+        <h4>Expected Result</h4>
+        <ul>
+          <li>The repository is removed.</li>
+          <li>The count decreases.</li>
+          <li>The repository disappears from the charts.</li>
+        </ul>
+      </article>
+
+      <article class="test-case">
+        <h3>TC-07 - Verify Tracked Repository Statistics <span class="pass">✅ Passed</span></h3>
+        <p><strong>Requirement:</strong> FR-04</p>
+        <h4>Expected Result</h4>
+        <ul>
+          <li>Repository name is displayed.</li>
+          <li>Stars are displayed.</li>
+          <li>Open issues are displayed.</li>
+          <li>Language is displayed when available.</li>
+          <li>Last commit date is displayed.</li>
+        </ul>
+      </article>
+
+      <article class="test-case">
+        <h3>TC-08 - Verify Individual Repository Refresh <span class="pass">✅ Passed</span></h3>
+        <p><strong>Requirement:</strong> FR-05, FR-06</p>
+        <ol>
+          <li>Track at least two repositories.</li>
+          <li>Refresh only one repository.</li>
+          <li>Observe the selected and unselected repository cards.</li>
+        </ol>
+        <h4>Expected Result</h4>
+        <ul>
+          <li>Only the selected repository displays its loading state.</li>
+          <li>Other repositories remain usable.</li>
+          <li>The selected repository updates after completion.</li>
+        </ul>
+      </article>
+
+      <article class="test-case">
+        <h3>TC-09 - Verify Refresh All and Loading State <span class="pass">✅ Passed</span></h3>
+        <p><strong>Requirement:</strong> FR-05, FR-06</p>
+        <ol>
+          <li>Track multiple repositories.</li>
+          <li>Click Refresh All.</li>
+          <li>Observe repository loading states.</li>
+          <li>Wait for completion.</li>
+        </ol>
+        <h4>Expected Result</h4>
+        <ul>
+          <li>Refresh starts for all repositories.</li>
+          <li>Loading states are handled correctly.</li>
+          <li>The application remains responsive.</li>
+        </ul>
+      </article>
+
+      <article class="test-case">
+        <h3>TC-10 - Verify Independent Repository Error State <span class="pass">✅ Passed</span></h3>
+        <p><strong>Requirement:</strong> FR-06</p>
+        <ol>
+          <li>Use Chrome DevTools request blocking.</li>
+          <li>Block one repository API path using <code>*api.github.com/repos/&lt;owner&gt;/&lt;repository&gt;*</code>.</li>
+          <li>Refresh the blocked repository.</li>
+          <li>Refresh another unblocked repository.</li>
+        </ol>
+        <h4>Expected Result</h4>
+        <ul>
+          <li>The blocked repository shows an error.</li>
+          <li>The error is isolated to that repository.</li>
+          <li>Other repositories remain usable and refresh successfully.</li>
+        </ul>
+      </article>
+
+      <article class="test-case">
+        <h3>TC-11 - Verify Tracked Repository Persistence <span class="pass">✅ Passed</span></h3>
+        <p><strong>Requirement:</strong> FR-07</p>
+        <ol>
+          <li>Track multiple repositories.</li>
+          <li>Refresh the page.</li>
+          <li>Close and reopen the application.</li>
+        </ol>
+        <h4>Expected Result</h4>
+        <ul>
+          <li>Tracked repositories persist after refresh.</li>
+          <li>Tracked repositories remain available after reopening the application in the same browser.</li>
+        </ul>
+      </article>
+
+      <article class="test-case">
+        <h3>TC-12 - Verify Horizontal Stars Bar Chart and Repository Labels <span class="pass">✅ Passed</span></h3>
+        <p><strong>Requirement:</strong> FR-08</p>
+        <h4>Expected Result</h4>
+        <ul>
+          <li>Every tracked repository appears in the Stars chart.</li>
+          <li>Star values match the repository data.</li>
+          <li>Track/untrack actions update the chart.</li>
+          <li>Names are readable or safely truncated.</li>
+          <li>Bars are horizontal.</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="section">
+      <h2>3. Enhancement and UI Test Execution</h2>
+
+      <article class="test-case">
+        <h3>TC-13 - Verify Horizontal Open Issues Chart and Repository Labels <span class="pass">✅ Passed</span></h3>
+        <p><strong>Requirement:</strong> ENH-02</p>
+        <h4>Expected Result</h4>
+        <ul>
+          <li>All tracked repositories appear in the Open Issues chart.</li>
+          <li>Issue values match repository data.</li>
+          <li>Track/untrack updates the chart.</li>
+          <li>Bars are horizontal and repository labels remain readable.</li>
+        </ul>
+      </article>
+
+      <article class="test-case">
+        <h3>TC-14 - Verify Tracked Repository Sorting <span class="pass">✅ Passed</span></h3>
+        <p><strong>Requirement:</strong> ENH-03</p>
+        <ol>
+          <li>Sort by Name (A-Z).</li>
+          <li>Sort by Stars (High to Low).</li>
+          <li>Sort by Open Issues (High to Low).</li>
+          <li>Sort by Latest Commit.</li>
+        </ol>
+        <h4>Expected Result</h4>
+        <ul>
+          <li>Repositories appear in the expected order for each sorting option.</li>
+          <li>Cards and charts stay consistent.</li>
+        </ul>
+      </article>
+
+      <article class="test-case">
+        <h3>TC-15 - Verify Theme Switching and Persistence <span class="pass">✅ Passed</span></h3>
+        <p><strong>Requirement:</strong> ENH-04</p>
+        <ol>
+          <li>Switch from light to dark mode.</li>
+          <li>Navigate between application views.</li>
+          <li>Refresh the browser.</li>
+          <li>Switch back to light mode.</li>
+        </ol>
+        <h4>Expected Result</h4>
+        <ul>
+          <li>Theme changes correctly and consistently.</li>
+          <li>The selected theme persists after refresh.</li>
+        </ul>
+      </article>
+
+      <article class="test-case">
+        <h3>TC-16 - Verify Hide / Show Charts Button <span class="pass">✅ Passed</span></h3>
+        <p><strong>Requirement:</strong> ENH-07</p>
+        <ol>
+          <li>Click Hide Charts.</li>
+          <li>Verify charts disappear while repository cards remain.</li>
+          <li>Click Show Charts.</li>
+        </ol>
+        <h4>Expected Result</h4>
+        <ul>
+          <li>Charts hide and return correctly.</li>
+          <li>The button label updates between Hide Charts and Show Charts.</li>
+        </ul>
+      </article>
+
+      <article class="test-case">
+        <h3>TC-17 - Verify Untrack All Button <span class="pass">✅ Passed</span></h3>
+        <p><strong>Requirement:</strong> ENH-06</p>
+        <ol>
+          <li>Track multiple repositories.</li>
+          <li>Click Untrack All.</li>
+          <li>Observe the repository list, charts, controls, and header count.</li>
+        </ol>
+        <h4>Expected Result</h4>
+        <ul>
+          <li>All tracked repositories are removed.</li>
+          <li>Header count returns to zero.</li>
+          <li>Charts disappear when no repositories remain.</li>
+          <li>Relevant controls become disabled or hidden.</li>
+          <li>Persisted tracked repository data is removed.</li>
+        </ul>
+      </article>
+
+      <article class="test-case">
+        <h3>TC-18 - Verify Responsive Design and Component Resizing <span class="pass">✅ Passed</span></h3>
+        <p><strong>Requirement:</strong> NFR-01</p>
+
+        <table>
+          <thead><tr><th>Device Type</th><th>Representative Viewport</th></tr></thead>
+          <tbody>
+            <tr><td>Mobile</td><td>375 × 812</td></tr>
+            <tr><td>Tablet</td><td>768 × 1024</td></tr>
+            <tr><td>Desktop</td><td>1440 × 900</td></tr>
+          </tbody>
+        </table>
+
+        <h4>Expected Result</h4>
+        <ul>
+          <li>Components resize correctly for the available viewport.</li>
+          <li>No unwanted horizontal overflow occurs.</li>
+          <li>No element overlap or unexpected layout shifting occurs.</li>
+          <li>Navigation, controls, cards, pagination, and charts remain usable.</li>
+          <li>Long repository names do not break the layout.</li>
+          <li>Light and dark themes remain functional at all tested sizes.</li>
+        </ul>
+
+        <div class="note">
+          <strong>Responsive Design Observation:</strong>
+          The application is responsive across the tested mobile, tablet, and desktop viewports with no UI breaks,
+          overflow, or unexpected layout shifting. The interface is primarily designed for desktop usage, so some
+          sections may be less visually optimized on smaller mobile screens. This is a visual-design limitation only;
+          functionality and usability remain intact.
+        </div>
+      </article>
+    </section>
+
+    <section class="section">
+      <h2>4. Requirement Traceability Matrix</h2>
+      <table>
+        <thead>
+          <tr><th>Requirement / Enhancement</th><th>Verified By</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>FR-01 - Debounced GitHub repository search</td><td>TC-01, TC-02</td><td class="pass">✅ Passed</td></tr>
+          <tr><td>FR-02 - Track / untrack repositories</td><td>TC-05, TC-06</td><td class="pass">✅ Passed</td></tr>
+          <tr><td>FR-03 - Tracked Repositories view</td><td>TC-05, TC-06</td><td class="pass">✅ Passed</td></tr>
+          <tr><td>FR-04 - Stars, open issues, and last commit date</td><td>TC-07</td><td class="pass">✅ Passed</td></tr>
+          <tr><td>FR-05 - Refresh individual / all repositories</td><td>TC-08, TC-09</td><td class="pass">✅ Passed</td></tr>
+          <tr><td>FR-06 - Independent loading and error states</td><td>TC-08, TC-09, TC-10</td><td class="pass">✅ Passed</td></tr>
+          <tr><td>FR-07 - Persist tracked repositories</td><td>TC-11</td><td class="pass">✅ Passed</td></tr>
+          <tr><td>FR-08 - Stars bar chart</td><td>TC-12</td><td class="pass">✅ Passed</td></tr>
+          <tr><td>NFR-01 - Responsive design</td><td>TC-18</td><td class="pass">✅ Passed</td></tr>
+          <tr><td>ENH-01 - Search pagination</td><td>TC-03, TC-04</td><td class="pass">✅ Passed</td></tr>
+          <tr><td>ENH-02 - Open Issues chart</td><td>TC-13</td><td class="pass">✅ Passed</td></tr>
+          <tr><td>ENH-03 - Repository sorting</td><td>TC-14</td><td class="pass">✅ Passed</td></tr>
+          <tr><td>ENH-04 - Light / Dark theme switching and persistence</td><td>TC-15</td><td class="pass">✅ Passed</td></tr>
+          <tr><td>ENH-05 - Tracked repository count in header</td><td>TC-05, TC-06</td><td class="pass">✅ Passed</td></tr>
+          <tr><td>ENH-06 - Untrack All button</td><td>TC-17</td><td class="pass">✅ Passed</td></tr>
+          <tr><td>ENH-07 - Hide / Show Charts button</td><td>TC-16</td><td class="pass">✅ Passed</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="section final">
+      <h2>5. Final Test Result</h2>
+      <p><strong>Overall Status:</strong> <span class="pass">✅ PASSED</span></p>
+
+      <div class="summary-grid">
+        <div class="metric">Passed<strong>18</strong></div>
+        <div class="metric">Failed<strong>0</strong></div>
+        <div class="metric">Executed<strong>18</strong></div>
+        <div class="metric">Pass Rate<strong>100%</strong></div>
+      </div>
+
+      <p>
+        All defined functional requirements and implemented enhancements were successfully verified.
+        No blocking functional defects were identified during the executed test scope.
+      </p>
+
+      <p>
+        Responsive behavior was validated across representative mobile, tablet, and desktop viewport sizes.
+        No UI overflow, broken layouts, overlapping components, or unexpected layout shifting was identified.
+      </p>
+
+      <h3>✅ Ready for Deployment / Submission</h3>
+    </section>
+  </main>
+
+</body></html>
